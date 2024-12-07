@@ -6,9 +6,9 @@ import java.util.UUID;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.validation.constraints.FutureOrPresent;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class ToDo {
@@ -20,8 +20,8 @@ public class ToDo {
     @Size(min = 10, max = 50, message = "Name must be 10 to 50 characters long.")
     private String name;
 
-    @NotEmpty(message = "Name must not be empty.")
-    @Max(value = 255, message = "Description must be less than 255 characters long.")
+    @NotEmpty(message = "Description must not be empty.")
+    @Size(max = 255, message = "Description must be less than 255 characters long.")
     private String description;
 
     @NotNull(message = "Date must not be null.")
@@ -29,10 +29,12 @@ public class ToDo {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dueDate;
 
-    @NotEmpty(message = "Name must not be empty.")
+    @NotEmpty(message = "Priority level must not be empty.")
+    @Pattern(regexp = "low|medium|high", message = "Priority must be low, medium, or high.")
     private String priorityLevel;
 
-    @NotEmpty(message = "Name must not be empty.")
+    @NotEmpty(message = "Status must not be empty.")
+    @Pattern(regexp = "Pending|Started|Progress|Completed", message = "Status must be Pending, Started, Progress, or Completed.")
     private String status;
 
     @NotNull(message = "Date must not be null.")
