@@ -6,6 +6,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -22,6 +24,9 @@ import sg.edu.nus.iss.vttp5_day19l_pracws.repository.MapRepo;
 
 @SpringBootApplication
 public class Vttp5Day19lPracwsApplication implements CommandLineRunner{
+
+	private static final Logger logger = LoggerFactory.getLogger(Vttp5Day19lPracwsApplication.class);
+
 
 	@Autowired
 	private MapRepo mapRepo;
@@ -52,24 +57,66 @@ public class Vttp5Day19lPracwsApplication implements CommandLineRunner{
 
 
 		// option 2: Using ResourceLoader
-		Resource resource = resourceLoader.getResource("classpath:data/todos.txt");
-
+		logger.info("Starting to load todos from todos.txt...");
+		Resource resource = resourceLoader.getResource("classpath:data/todos.txt"); // file is now a resource obj, not read yet, just referenced
+		
+		// opens the file as a stream of bytes, allows us to process the file byte-by-byte or convert to other formats like JSON
 		try(InputStream is = resource.getInputStream())
 		{
 			// Step 2: Parse the file content using JSON-P
-			JsonReader jsonReader = Json.createReader(is);
+			
+			// prepatory step, initiliases JsonReader w InputStream as its input. Doesn't process immediately, jsut a setup step that tells the library, "I'll process this stream as JSON soon."
+			JsonReader jsonReader = Json.createReader(is); 
+			
+			// Specifying how to interpret the JSON content (in this case, as a JSON array)
 			JsonArray todosArray = jsonReader.readArray();
 
+
+			// Check if the array is empty
+            if (todosArray.isEmpty()) {
+                // System.out.println("No todos found in the file.");
+				logger.warn("No todos found in the file.");
+                return;
+            }
+
+			
+
 			// Step 3: Store the data in Redis using MapRepo
-			for (JsonObject todo : todosArray.getValuesAs(JsonObject.class)) {
+			for (JsonObject todo : todosArray.getValuesAs(JsonObject.class)) // getValuesAs converts each element in the JsonArray into a JsonObject
+			{
 				String id = todo.getString("id");
-				mapRepo.create(Constant.todoKey, id, todo.toString());
+				
+
+
+				// Check if the key already exists in Redis
+                if (mapRepo.get(Constant.todoKey, id) != null) 
+				{
+					// System.out.println("Todo with ID " + id + " already exists. Skipping.");
+                    logger.info("Todo with ID {} already exists. Skipping.", id);
+					
+                    continue;
+                }
+
+
+				// Add to Redis if it doesn't exist
+				mapRepo.put(Constant.todoKey, id, todo.toString());
+				// System.out.println("Added todo with ID " + id + " to Redis.");
+				logger.debug("Added todo with ID {} to Redis.", id);
+
+
 			}
+
+			// Log success
+			// System.out.println("Todos have been loaded into Redis.");
+			logger.info("Todos have been successfully loaded into Redis.");
+		} 
+		catch(Exception e)
+		{
+			// Log the error and prevent the application from crashing
+			// System.err.println("Error occured while processing todos.txt: " + e.getMessage());
+			// e.printStackTrace();
+
+			logger.error("Error occurred while processing todos.txt: {}", e.getMessage(), e);
 		}
-
-		// Log the result
-		System.out.println("Todos have been loaded into Redis.");
-
-		// Put the data into Redis Map
 	}
 }
