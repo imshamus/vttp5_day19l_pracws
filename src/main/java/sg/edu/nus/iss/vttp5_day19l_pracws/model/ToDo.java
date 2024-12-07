@@ -13,7 +13,8 @@ import jakarta.validation.constraints.Size;
 
 public class ToDo {
 
-    // @Max(value = 50, message = "Max length is 50.")
+    // @Max(value = 50, message = "Max length is 50.") // max is for numeric not for string
+    // id is generated w UUID which is always a 36-character String, hence fulfilling the requirement of being under 50 characters.
     private String id;
 
     @NotEmpty(message = "Name must not be empty.")
@@ -47,8 +48,14 @@ public class ToDo {
     
     public ToDo() {
         this.id = UUID.randomUUID().toString(); // generate Random ID
-        this.createdAt = new Date(System.currentTimeMillis());
-        this.updatedAt = new Date(System.currentTimeMillis());
+        
+        Date current = new Date(System.currentTimeMillis()); // returns the current time in epoch milliseconds
+        // new Date(1733565600000) would represent December 7, 2024, 10:00:00 AM UTC.
+        // you could simply use this.createdAt = new Date(); and it would work the same way
+        // System.currentTimeMillis() makes the intent explicit to show date is based on current system time.
+
+        this.createdAt = current;
+        this.updatedAt = current;
     }
 
     public ToDo(String name, String description, Date dueDate, String priorityLevel, String status, Date createdAt, Date updatedAt) 
@@ -71,8 +78,12 @@ public class ToDo {
         this.dueDate = dueDate;
         this.priorityLevel = priorityLevel;
         this.status = status;
-        this.createdAt = new Date(System.currentTimeMillis());
-        this.updatedAt = new Date(System.currentTimeMillis());
+
+        Date current = new Date(System.currentTimeMillis()); // returns the current time in epoch milliseconds
+        // makes it clear that we are basing Date on epoch millisecs
+        // helpful for working with databases like Redis which often store dates as epoch millisecs
+        this.createdAt = current;
+        this.updatedAt = current;
     }
 
     public String getId() {
