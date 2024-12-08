@@ -23,7 +23,7 @@ public class TodoController {
     private TodoService todoService;
 
     @GetMapping("/list")
-    public String ListTodos(@RequestParam(value = "status", required = false) String status, Model model) throws ParseException 
+    public String ListTodos(@RequestParam(value = "status", required = false) String status, Model model) throws ParseException // when status is not provided as not required, status is null
     {
         List<Todo> todos = todoService.getAllTodos();
 
