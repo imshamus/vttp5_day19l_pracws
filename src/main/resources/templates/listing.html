@@ -44,7 +44,18 @@
                     <th>Description</th>
                     <th>Due Date</th>
                     <th>Priority Level</th>
-                    <th>Status</th>
+                    <th class="dropdown">
+                      <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"> Status </button>
+
+                      <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/todos/list">All Status</a></li>
+                        <li><a class="dropdown-item" href="/todos/list?status=pending">Pending</a></li>
+                        <li><a class="dropdown-item" href="/todos/list?status=started">Started</a></li>
+                        <li><a class="dropdown-item" href="/todos/list?status=in_progress">In Progress</a></li>
+                        <li><a class="dropdown-item" href="/todos/list?status=completed">Completed</a></li>
+                      </ul>
+
+                    </th>
                     <th>Created On</th>
                     <th>Updated On</th>
                 </tr>
