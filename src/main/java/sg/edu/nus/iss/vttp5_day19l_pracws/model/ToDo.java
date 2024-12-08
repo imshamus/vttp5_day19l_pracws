@@ -11,7 +11,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-public class ToDo {
+public class Todo {
 
     // @Max(value = 50, message = "Max length is 50.") // max is for numeric not for string
     // id is generated w UUID which is always a 36-character String, hence fulfilling the requirement of being under 50 characters.
@@ -46,7 +46,9 @@ public class ToDo {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date updatedAt;
     
-    public ToDo() {
+    // CONSTRUCTORS
+    // Default Constructor for Todo Obj
+    public Todo() {
         this.id = UUID.randomUUID().toString(); // generate Random ID
         
         Date current = new Date(System.currentTimeMillis()); // returns the current time in epoch milliseconds
@@ -58,9 +60,10 @@ public class ToDo {
         this.updatedAt = current;
     }
 
-    public ToDo(String name, String description, Date dueDate, String priorityLevel, String status, Date createdAt, Date updatedAt) 
+    // Constructor for updating or rebuilding Todo object from extracted data stored in Redis
+    public Todo(String id, String name, String description, Date dueDate, String priorityLevel, String status, Date createdAt, Date updatedAt) 
     {
-        this.id = UUID.randomUUID().toString(); // generate Random ID
+        this.id = id; 
         this.name = name;
         this.description = description;
         this.dueDate = dueDate;
@@ -70,7 +73,8 @@ public class ToDo {
         this.updatedAt = updatedAt;
     }
 
-    public ToDo(String name, String description, Date dueDate, String priorityLevel, String status) 
+    // Constructor for creating new Todo object
+    public Todo(String name, String description, Date dueDate, String priorityLevel, String status) 
     {
         this.id = UUID.randomUUID().toString(); // generate Random ID
         this.name = name;
