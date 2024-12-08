@@ -86,4 +86,8 @@ public class TodoService {
         return todos;
     }
     
+    public void addTodo(Todo todo)
+    {
+        mapRepo.put(Constant.todoKey, todo.getId().toString(), todo.toString());
+    }
 }

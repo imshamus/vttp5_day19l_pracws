@@ -35,7 +35,7 @@ public class Todo {
     private String priorityLevel;
 
     @NotEmpty(message = "Status must not be empty.")
-    @Pattern(regexp = "Pending|Started|Progress|Completed", message = "Status must be Pending, Started, Progress, or Completed.")
+    @Pattern(regexp = "pending|started|in_progress|completed", message = "Status must be pending, started, in_progress, or completed.")
     private String status;
 
     @NotNull(message = "Date must not be null.")

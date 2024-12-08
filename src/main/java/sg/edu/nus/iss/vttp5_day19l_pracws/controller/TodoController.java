@@ -7,12 +7,18 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import jakarta.validation.Valid;
 import sg.edu.nus.iss.vttp5_day19l_pracws.model.Todo;
 import sg.edu.nus.iss.vttp5_day19l_pracws.service.TodoService;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 @Controller
@@ -41,6 +47,26 @@ public class TodoController {
 
         return "listing";
     }
+    
+    @GetMapping("/add")
+    public String showAddForm(Model model) {
+        model.addAttribute("todo", new Todo());
+        return "add";
+    }
+
+    @PostMapping("/add")
+    public String postAddForm(@Valid @ModelAttribute("todo") Todo todo, BindingResult bindingResult) {
+        if (bindingResult.hasErrors())
+        {
+            bindingResult.getAllErrors();
+            return "add";
+        }
+
+        todoService.addTodo(todo);
+
+        return "redirect:/listing";
+    }
+    
     
     
 }
