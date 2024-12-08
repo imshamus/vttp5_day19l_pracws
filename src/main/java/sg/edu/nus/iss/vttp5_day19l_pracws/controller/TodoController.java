@@ -34,6 +34,7 @@ public class TodoController {
             .collect(Collectors.toList());
         }
 
+        // add todos to the model
         model.addAttribute("todos", todos);
 
         return "listing";

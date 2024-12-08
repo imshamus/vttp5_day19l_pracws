@@ -76,7 +76,7 @@ public class TodoService {
             todo.setDescription(jsonObject.getString("description"));
             todo.setDueDate(dueDate);
             todo.setPriorityLevel(jsonObject.getString("priority_level"));
-            todo.setStatus("status");
+            todo.setStatus(jsonObject.getString("status"));
             todo.setCreatedAt(createdAt);
             todo.setUpdatedAt(updatedAt);
 
