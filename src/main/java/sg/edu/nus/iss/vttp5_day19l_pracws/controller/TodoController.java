@@ -31,7 +31,9 @@ public class TodoController {
         if (status != null && !status.isEmpty())
         {
             todos = todos.stream().filter(todo -> todo.getStatus().equalsIgnoreCase(status))
-            .collect(Collectors.toList());
+            .collect(Collectors.toList()); // check that status is equals to the status parse in (e.g. pending) but ignores whether upper or lowercase like pEnDinG.
+            // collect() terminates the stream pipeline and converts the processed stream back into List<Todo>
+            // Collectors.toList tells collect() to gather the elements into a new List<Todo>, converts the stream back into a collection
         }
 
         // add todos to the model
