@@ -50,12 +50,14 @@ public class TodoController {
     
     @GetMapping("/add")
     public String showAddForm(Model model) {
-        model.addAttribute("todo", new Todo());
+        model.addAttribute("todo", new Todo()); // Invokes the default constructor - random id, current time as created & updated.
+        // other attributes are null for strings and 0 for numbers
         return "add";
     }
 
     @PostMapping("/add")
-    public String postAddForm(@Valid @ModelAttribute("todo") Todo todo, BindingResult bindingResult) {
+    public String postAddForm(@Valid @ModelAttribute("todo") Todo todo, BindingResult bindingResult) throws ParseException {
+        
         if (bindingResult.hasErrors())
         {
             bindingResult.getAllErrors();
@@ -64,7 +66,7 @@ public class TodoController {
 
         todoService.addTodo(todo);
 
-        return "redirect:/listing";
+        return "redirect:/todos/list";
     }
     
     
