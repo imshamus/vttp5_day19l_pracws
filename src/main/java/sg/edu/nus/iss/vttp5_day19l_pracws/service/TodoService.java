@@ -159,6 +159,12 @@ public class TodoService {
             todos.add(todo);
         }
 
+        // Sort the todos by creation date (or any other criteria)
+        todos.sort((t1, t2) -> t1.getCreatedAt().compareTo(t2.getCreatedAt()));
+
+        // Sorts the list of Todos by their creation date.
+        // Replace getCreatedAt with any other field if you want a different sorting criterion (e.g., priority or due date).
+
         return todos;
     }
 

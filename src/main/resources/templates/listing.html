@@ -92,7 +92,17 @@
                     <td th:utext="${#dates.format(todo.updatedAt, 'dd MMM yyyy')}"></td>
                     
                     <td>
-                      <a th:href = "@{/todos/delete(id=${todo.id})}" class="btn btn-danger"> Delete</a>
+                      <!-- Delete with GET method -->
+                      <!-- <a th:href = "@{/todos/delete(id=${todo.id})}" class="btn btn-danger"> Delete</a> -->
+
+                      <!-- Delete with POST method -->
+                      <!-- name="id": The name attribute maps to the @RequestParam("id") in your controller method. -->
+                      <!-- th:value="${todo.id}": Thymeleaf populates the value of this hidden input with the id of the current todo (e.g., id=123). -->
+                      <form method="post" th:action="@{/todos/delete}">
+                        <input type="hidden" name="id" th:value="${todo.id}" />
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                    
                     </td>
                 </tr>
             </tbody>

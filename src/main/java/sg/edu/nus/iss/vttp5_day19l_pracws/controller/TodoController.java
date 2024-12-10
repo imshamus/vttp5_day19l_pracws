@@ -138,9 +138,9 @@ public class TodoController {
     }
 
     @GetMapping("/delete")
-    public String executeDelete(@RequestParam String id, HttpSession session) 
+    public String delGetMethod(@RequestParam String id, HttpSession session) 
     // requested an id
-    // /todos/delete?id=123
+    // /todos/delete?id=123, this id was mapped from the brackets, (id=${todo.id}), below
     // <a th:href="@{/todos/delete(id=${todo.id})}" class="btn btn-danger">Delete</a> 
     {
         // Retrieve user name from session
@@ -153,8 +153,27 @@ public class TodoController {
         todoService.deleteTodo(userName, id);
 
         return "redirect:/todos/list";
-
     }
+
+    @PostMapping("/delete")
+    public String delPostMethod(@RequestParam String id, HttpSession session) 
+    // <form method="post" th:action="@{/todos/delete}">
+        // <input type="hidden" name="id" th:value="${todo.id}" />
+        // <button type="submit" class="btn btn-danger">Delete</button>
+    // </form>
+    // requestparam's id is mapped to name = "id" = th:value, th:action is mapped to this method
+    {
+    String userName = (String) session.getAttribute("userName");
+    
+    if (userName == null) {
+        return "redirect:/refused";
+    }
+
+    todoService.deleteTodo(userName, id);
+
+    return "redirect:/todos/list";
+}
+
     
     
 }
