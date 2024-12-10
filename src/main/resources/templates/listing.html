@@ -101,8 +101,11 @@
                       <form method="post" th:action="@{/todos/delete}">
                         <input type="hidden" name="id" th:value="${todo.id}" />
                         <button type="submit" class="btn btn-danger">Delete</button>
-                    </form>
-                    
+                      </form>
+
+                      <!-- Update Button, uses GET method to obtain original data -->
+                      <a th:href = "@{/todos/update(id=${todo.id})}" class="btn btn-primary"> Update</a>
+                      
                     </td>
                 </tr>
             </tbody>

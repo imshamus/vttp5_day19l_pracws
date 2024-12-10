@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update To Do</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class = "container">
+        <br>
+        <h3>Update Page</h3>
+        <br>
+
+        <form method="POST" th:action="@{/todos/update}" th:object="${todo}">
+
+            <!-- Must include id since submitting without it assigned makes Todo object become treated as a new object -->
+            <input type="hidden" name="id" th:field="*{id}" />
+
+            <div class="mb-3">
+            <label class="form-labal">Name:</label>
+            <input type="text" class="form-control" name="name" th:field="*{name}"  placeholder="Enter Name (10-50 characters long)" />
+            <p class = "text-danger" data-th-if="${#fields.hasErrors('name')}" data-th-errors = "*{name}">
+            </p>
+            </div>
+
+            <div class="mb-3">
+            <label class="form-labal">Description:</label>
+            <input type="text" class="form-control" name="description" th:field="*{description}"  placeholder="Enter description (less than 255 characters long)" />
+            <p class = "text-danger" data-th-if="${#fields.hasErrors('description')}" data-th-errors = "*{description}">
+            </p>
+            </div>
+            
+            <div class="mb-3">
+            <label class="form-labal">Due Date:</label>
+            <input type="date" class="form-control" name="dueDate" th:field="*{dueDate}"  placeholder="Enter Due Date" />
+            <p class = "text-danger" data-th-if="${#fields.hasErrors('dueDate')}" data-th-errors = "*{dueDate}">
+            </p>
+            </div>
+
+            <div class="mb-3">
+            <label class="form-labal">Priority Level:</label>
+            <input type="text" class="form-control" name="priorityLevel" th:field="*{priorityLevel}"  placeholder="Enter Priority Level: low | medium | high" />
+            <p class = "text-danger" data-th-if="${#fields.hasErrors('priorityLevel')}" data-th-errors = "*{priorityLevel}">
+            </p>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-labal">Status:</label>
+                <input type="text" class="form-control" name="status" th:field="*{status}"  placeholder="Enter Status: pending | started | in_progress | completed" />
+                <p class = "text-danger" data-th-if="${#fields.hasErrors('status')}" data-th-errors = "*{status}">
+                </p>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Add Todo</button>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+
+</body>
+</html>

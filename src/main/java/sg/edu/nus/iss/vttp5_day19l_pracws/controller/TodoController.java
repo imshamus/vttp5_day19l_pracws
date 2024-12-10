@@ -119,16 +119,17 @@ public class TodoController {
     @PostMapping("/add")
     public String postAddForm(@Valid @ModelAttribute("todo") Todo todo,
                               BindingResult bindingResult,
-                              HttpSession session) throws ParseException {
-        if (bindingResult.hasErrors()) {
-            return "add";
-        }
-
+                              HttpSession session) throws ParseException 
+    {
         // Retrieve user name from session
         String userName = (String) session.getAttribute("userName");
 
         if (userName == null) {
             return "redirect:/refused";
+        }
+
+        if (bindingResult.hasErrors()) {
+            return "add";
         }
 
         // Add todo to the user-specific Redis data
@@ -172,7 +173,49 @@ public class TodoController {
     todoService.deleteTodo(userName, id);
 
     return "redirect:/todos/list";
-}
+    }
+
+
+    @GetMapping("/update")
+    // Requested an id
+    // /todos/update?id=123
+    public String showUpdateForm(@RequestParam String id, HttpSession session, Model model) throws ParseException 
+    {
+        // Retrieve user name from session
+        String userName = (String) session.getAttribute("userName");
+
+        if (userName == null) {
+            return "redirect:/refused";
+        }
+
+        Todo todo = todoService.getTodoById(userName, id);
+        model.addAttribute("todo", todo);
+
+        return "update";
+    }
+    
+
+    @PostMapping("/update")
+    public String updateTodo(@Valid @ModelAttribute("todo") Todo todo,
+                              BindingResult bindingResult,
+                              HttpSession session) throws ParseException 
+    {
+        // Retrieve user name from session
+        String userName = (String) session.getAttribute("userName");
+
+        if (userName == null) {
+            return "redirect:/refused";
+        }
+
+        if (bindingResult.hasErrors()) {
+            return "update";
+        }
+
+        // Add todo to the user-specific Redis data
+        todoService.updateTodo(userName, todo);
+
+        return "redirect:/todos/list";
+    }
 
     
     

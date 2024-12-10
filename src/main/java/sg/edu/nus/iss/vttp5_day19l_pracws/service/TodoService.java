@@ -159,11 +159,11 @@ public class TodoService {
             todos.add(todo);
         }
 
-        // Sort the todos by creation date (or any other criteria)
-        todos.sort((t1, t2) -> t1.getCreatedAt().compareTo(t2.getCreatedAt()));
+        // Sort the todos by ID (or any other criteria)
+        todos.sort((t1, t2) -> t1.getId().compareTo(t2.getId()));
 
-        // Sorts the list of Todos by their creation date.
-        // Replace getCreatedAt with any other field if you want a different sorting criterion (e.g., priority or due date).
+        // Sorts the list of Todos by their ID.
+        // Replace getID with any other field if you want a different sorting criterion (e.g., priority or due date or getCreatedAt).
 
         return todos;
     }
@@ -190,12 +190,64 @@ public class TodoService {
         mapRepo.put(redisKey, todo.getId(), jsonTodo.toString());
     }
 
+    // Delete by ID
     public void deleteTodo(String userName, String todoId)
     {
         String redisKey = Constant.todoKey + ":" + userName;
 
         mapRepo.delete(redisKey, todoId);
+    }
 
+    // Get Todo by ID
+    public Todo getTodoById(String userName, String todoId) throws ParseException 
+    {
+        String redisKey = Constant.todoKey + ":" + userName;
+        
+        // Retrieve specific Todo JSON from Redis and Stringify
+        String todoString = mapRepo.get(redisKey, todoId).toString();
 
+        JsonReader jsonReader = Json.createReader(new StringReader(todoString));
+        JsonObject jsonObject = jsonReader.readObject();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE, MM/dd/yyyy");
+        Date dueDate = sdf.parse(jsonObject.getString("due_date"));
+        Date createdAt = sdf.parse(jsonObject.getString("created_at"));
+        Date updatedAt = sdf.parse(jsonObject.getString("updated_at"));
+
+        Todo todo = new Todo(
+                jsonObject.getString("id"),
+                jsonObject.getString("name"),
+                jsonObject.getString("description"),
+                dueDate,
+                jsonObject.getString("priority_level"),
+                jsonObject.getString("status"),
+                createdAt,
+                updatedAt
+        );
+
+        return todo;
+    }
+
+    public void updateTodo(String userName, Todo todo)
+    {
+        String redisKey = Constant.todoKey + ":" + userName;
+
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE, MM/dd/yyyy");
+        String dueDateString = sdf.format(todo.getDueDate());
+        String createdAtString = sdf.format(todo.getCreatedAt());
+        String updatedAtString = sdf.format(todo.getUpdatedAt());
+
+        JsonObject jsonTodo = Json.createObjectBuilder()
+                .add("id", todo.getId())
+                .add("name", todo.getName())
+                .add("description", todo.getDescription())
+                .add("due_date", dueDateString)
+                .add("priority_level", todo.getPriorityLevel())
+                .add("status", todo.getStatus())
+                .add("created_at", createdAtString)
+                .add("updated_at", updatedAtString)
+                .build();
+
+        mapRepo.put(redisKey, todo.getId(), jsonTodo.toString());
     }
 }
