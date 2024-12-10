@@ -63,6 +63,8 @@ public class ListRepo {
     // Redis searches the list and removes matching elements
     
     // Remove an Element from a List - removes the first occurance of a specific value from a list (LREM)
+    // Searches and remove that specified one
+    // LREM k1 1 e1 = remove from key1, 1 occurance of element1
     public void remove(String key, long count, String value) {
         template.opsForList().remove(key, count, value);
     }
