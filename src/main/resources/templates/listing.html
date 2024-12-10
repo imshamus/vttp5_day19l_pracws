@@ -12,7 +12,12 @@
     <div class = "container">
 
           <!-- Display logged-in user -->
-          <h3 th:utext="'Wecome, ' + ${username}"></h3>
+          <!-- <h3 th:utext="'Wecome, ' + ${userName}"></h3>
+          <h3 th:utext="'Age: ' + ${userAge}"></h3> -->
+
+          <h3>Welcome, <span th:text="${userName}"></span>! 
+            (Age: <span th:text="${userAge}"></span>)</h3>
+
           
         <br>
         <h3>Todo List</h3>
@@ -89,7 +94,7 @@
         <a th:href="@{/todos/add}" class="btn btn-primary">Add new to-do</a>
 
         <!-- Logout button -->
-        <a href="/logout" class="btn btn-danger">Logout</a>
+        <a th:href="@{/logout}" class="btn btn-danger">Logout</a>
 
     </div>
 

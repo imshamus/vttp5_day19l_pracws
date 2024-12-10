@@ -126,10 +126,10 @@ public class TodoService {
     // }
 
     // WITH SESSIONS
-    public List<Todo> getAllTodos(String userKey) throws ParseException 
+    public List<Todo> getAllTodos(String userName) throws ParseException 
     {
         // Retrieve user-specific todos
-        String redisKey = Constant.todoKey + ":" + userKey;
+        String redisKey = Constant.todoKey + ":" + userName;
 
         Map<Object, Object> todosObject = mapRepo.getAll(redisKey);
         List<Todo> todos = new ArrayList<>();
@@ -162,8 +162,8 @@ public class TodoService {
         return todos;
     }
 
-    public void addTodo(String userKey, Todo todo) throws ParseException {
-        String redisKey = Constant.todoKey + ":" + userKey;
+    public void addTodo(String userName, Todo todo) throws ParseException {
+        String redisKey = Constant.todoKey + ":" + userName;
 
         SimpleDateFormat sdf = new SimpleDateFormat("EEE, MM/dd/yyyy");
         String dueDateString = sdf.format(todo.getDueDate());

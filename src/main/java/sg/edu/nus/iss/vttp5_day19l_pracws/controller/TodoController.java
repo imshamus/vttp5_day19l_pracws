@@ -81,17 +81,18 @@ public class TodoController {
                             Model model,
                             HttpSession session) throws ParseException {
         // Get the user key from the session
-        String userKey = (String) session.getAttribute("userKey");
-        // "userKey" value 's is null before initialised
+        String userName = (String) session.getAttribute("userName");
+        Integer userAge = (Integer) session.getAttribute("userAge");
+        // "userName" & "userAge" value 's is null before initialised
         // cast to String as the getAttribute method returns an Object
 
-        if (userKey == null) {
-            // Redirect to login if no session exists
-            return "redirect:/login";
+        if (userName == null) {
+            // Redirect to refused if no session exists > refused has login
+            return "redirect:/refused";
         }
 
         // Retrieve todos for this user
-        List<Todo> todos = todoService.getAllTodos(userKey);
+        List<Todo> todos = todoService.getAllTodos(userName);
 
         // Filter todos by status if provided
         if (status != null && !status.isEmpty()) {
@@ -102,7 +103,10 @@ public class TodoController {
 
         // Add todos and username to the model
         model.addAttribute("todos", todos);
-        model.addAttribute("username", userKey); // Add username for "Welcome" message
+        // Add username and age for "Welcome" message
+        model.addAttribute("userName", userName); 
+        model.addAttribute("userAge", userAge); 
+        
 
         return "listing";
     }
@@ -112,7 +116,7 @@ public class TodoController {
         String userKey = (String) session.getAttribute("userKey");
 
         if (userKey == null) {
-            return "redirect:/login";
+            return "redirect:/refused";
         }
 
         model.addAttribute("todo", new Todo());
@@ -131,7 +135,7 @@ public class TodoController {
         String userKey = (String) session.getAttribute("userKey");
 
         if (userKey == null) {
-            return "redirect:/login";
+            return "redirect:/refused";
         }
 
         // Add todo to the user-specific Redis data

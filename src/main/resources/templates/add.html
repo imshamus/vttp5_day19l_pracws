@@ -47,7 +47,7 @@
             
             <div class="mb-3">
             <label class="form-labal">Due Date:</label>
-            <input type="date" class="form-control" name="dueDate" th:field="*{dueDate}"  placeholder="setup" />
+            <input type="date" class="form-control" name="dueDate" th:field="*{dueDate}"  placeholder="Enter Due Date" />
             <p class = "text-danger" data-th-if="${#fields.hasErrors('dueDate')}" data-th-errors = "*{dueDate}">
             </p>
             </div>

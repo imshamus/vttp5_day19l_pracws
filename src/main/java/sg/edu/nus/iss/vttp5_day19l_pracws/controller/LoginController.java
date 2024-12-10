@@ -23,6 +23,8 @@ public class LoginController {
         return "login";
     }
 
+    // requestParam takes in "username" in form's name
+    // "username" in the method parameter matches the form field's name attribute
     // @PostMapping("/login")
     // public String login(@RequestParam String username, HttpSession session) {
     //     session.setAttribute("userKey", username);
@@ -30,18 +32,27 @@ public class LoginController {
     // }
 
     @PostMapping("/login")
-    public String processLogin(@Valid @ModelAttribute("user") User user, BindingResult bindingResult, HttpSession session) {
-        if (bindingResult.hasErrors()) {
-            return "login";
-    }
+    public String processLogin(@ModelAttribute("user") User user, 
+    BindingResult bindingResult, Model model,
+    HttpSession session) {
+        // if (bindingResult.hasErrors()) {
+        //     return "login";
+        // }
 
-    if (user.getAge() < 10) {
-        return "redirect:/underage";
-    }
+        if ((user.getAge() == null) || (user.getFullName() == null))
+        {
+            return "redirect:/refused";
+        }
 
-    session.setAttribute("user", user);
-    return "redirect:/todos/list";
-}
+        if (user.getAge() < 10) {
+            return "redirect:/underage";
+        }
+
+        session.setAttribute("userName", user.getFullName());
+        session.setAttribute("userAge", user.getAge());
+        
+        return "redirect:/todos/list";
+    }
 
 
 
@@ -50,4 +61,16 @@ public class LoginController {
         session.invalidate();
         return "redirect:/login";
     }
+
+    @GetMapping("/refused")
+    public String showRefusedPage() {
+        return "refused";
+    }
+
+    @GetMapping("/underage")
+    public String showUnderagePage(){
+        return "underage";
+    }
+    
+    
 }
