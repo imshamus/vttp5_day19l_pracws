@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import sg.edu.nus.iss.vttp5_day19l_pracws.model.Todo;
+import sg.edu.nus.iss.vttp5_day19l_pracws.model.User;
 import sg.edu.nus.iss.vttp5_day19l_pracws.service.TodoService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -80,13 +81,13 @@ public class TodoController {
     public String listTodos(@RequestParam(value = "status", required = false) String status,
                             Model model,
                             HttpSession session) throws ParseException {
-        // Get the user key from the session
+        // Get the user data from the session
         String userName = (String) session.getAttribute("userName");
         Integer userAge = (Integer) session.getAttribute("userAge");
         // "userName" & "userAge" value 's is null before initialised
         // cast to String as the getAttribute method returns an Object
 
-        if (userName == null) {
+        if (userName == null || userAge == null) {
             // Redirect to refused if no session exists > refused has login
             return "redirect:/refused";
         }
@@ -104,21 +105,13 @@ public class TodoController {
         // Add todos and username to the model
         model.addAttribute("todos", todos);
         // Add username and age for "Welcome" message
-        model.addAttribute("userName", userName); 
-        model.addAttribute("userAge", userAge); 
-        
+        model.addAttribute("user", new User(userName, userAge)); 
 
         return "listing";
     }
 
     @GetMapping("/add")
-    public String showAddForm(Model model, HttpSession session) {
-        String userKey = (String) session.getAttribute("userKey");
-
-        if (userKey == null) {
-            return "redirect:/refused";
-        }
-
+    public String showAddForm(Model model) {
         model.addAttribute("todo", new Todo());
         return "add";
     }
@@ -131,17 +124,37 @@ public class TodoController {
             return "add";
         }
 
-        // Retrieve user key from session
-        String userKey = (String) session.getAttribute("userKey");
+        // Retrieve user name from session
+        String userName = (String) session.getAttribute("userName");
 
-        if (userKey == null) {
+        if (userName == null) {
             return "redirect:/refused";
         }
 
         // Add todo to the user-specific Redis data
-        todoService.addTodo(userKey, todo);
+        todoService.addTodo(userName, todo);
 
         return "redirect:/todos/list";
     }
+
+    @GetMapping("/delete")
+    public String executeDelete(@RequestParam String id, HttpSession session) 
+    // requested an id
+    // /todos/delete?id=123
+    // <a th:href="@{/todos/delete(id=${todo.id})}" class="btn btn-danger">Delete</a> 
+    {
+        // Retrieve user name from session
+        String userName = (String) session.getAttribute("userName");
+
+        if (userName == null) {
+            return "redirect:/refused";
+        }
+
+        todoService.deleteTodo(userName, id);
+
+        return "redirect:/todos/list";
+
+    }
+    
     
 }

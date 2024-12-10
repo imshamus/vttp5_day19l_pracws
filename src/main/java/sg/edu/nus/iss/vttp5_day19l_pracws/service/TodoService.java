@@ -183,4 +183,13 @@ public class TodoService {
 
         mapRepo.put(redisKey, todo.getId(), jsonTodo.toString());
     }
+
+    public void deleteTodo(String userName, String todoId)
+    {
+        String redisKey = Constant.todoKey + ":" + userName;
+
+        mapRepo.delete(redisKey, todoId);
+
+
+    }
 }

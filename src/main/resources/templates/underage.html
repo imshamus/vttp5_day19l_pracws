@@ -11,12 +11,13 @@
 <body>
     <div class="container">
         <br>
-        <h1>You're Underage..</h1>
+        <h1>Hello, <span th:text="${userName}"></span></h1>
+        <h3>You're Underage..</h1>
         <br>
         <p>Todos list is 儿童不宜🔞 ！！！</p>
-        <p>You're a few years to young. Please try again when you're at least 10 years old.</p>
+        <p>You're <span th:text="${yearsTooYoung}"></span> too young. Please try again when you're at least 10 years old.</p>
 
-        <a th:href="@{/login}" class="btn btn-primary">Click here to Login</a>
+        <a th:href="@{/logout}" class="btn btn-primary">Click here in <span th:text="${yearsTooYoung}"></span> years.</a>
     </div>
     
     

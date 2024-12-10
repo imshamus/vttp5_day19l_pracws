@@ -23,14 +23,16 @@ public class LoginController {
         return "login";
     }
 
-    // requestParam takes in "username" in form's name
-    // "username" in the method parameter matches the form field's name attribute
+    // requestParam is for binding simple data types (e.g., String, int, boolean) based on the form field's name attribute.
+    // When you declare a method parameter with @RequestParam (e.g., @RequestParam String username), Spring assumes that the name of the parameter (i.e., username) matches the name attribute of the HTML form field.
+    
     // @PostMapping("/login")
     // public String login(@RequestParam String username, HttpSession session) {
     //     session.setAttribute("userKey", username);
     //     return "redirect:/todos/list";
     // }
 
+    // When using @modelattribute, it is meant for binding entire objects
     @PostMapping("/login")
     public String processLogin(@ModelAttribute("user") User user, 
     BindingResult bindingResult, Model model,
@@ -39,12 +41,15 @@ public class LoginController {
         //     return "login";
         // }
 
-        if ((user.getAge() == null) || (user.getFullName() == null))
+        if ((user.getAge() == null) || (user.getFullName() == "")) // when using leaves the field blank, it is "", not the same as null
         {
             return "redirect:/refused";
         }
 
         if (user.getAge() < 10) {
+
+            session.setAttribute("userName", user.getFullName());
+            session.setAttribute("userAge", user.getAge());
             return "redirect:/underage";
         }
 
@@ -68,7 +73,19 @@ public class LoginController {
     }
 
     @GetMapping("/underage")
-    public String showUnderagePage(){
+    public String showUnderagePage(HttpSession httpSession, Model model){
+
+        // Get the user data from the session
+        String userName = (String) httpSession.getAttribute("userName");
+        Integer userAge = (Integer) httpSession.getAttribute("userAge");
+
+        if (userAge != null)
+        {
+            int yearsTooYoung = 10 - userAge;
+            model.addAttribute("yearsTooYoung", yearsTooYoung);
+            model.addAttribute("userName", userName);
+        }
+
         return "underage";
     }
     

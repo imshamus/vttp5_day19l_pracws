@@ -61,7 +61,7 @@
 
             <div class="mb-3">
                 <label class="form-labal">Status:</label>
-                <input type="text" class="form-control" name="status" th:field="*{status}"  placeholder="Enter Status: Pending | Started | Progress | Completed" />
+                <input type="text" class="form-control" name="status" th:field="*{status}"  placeholder="Enter Status: pending | started | in_progress | completed" />
                 <p class = "text-danger" data-th-if="${#fields.hasErrors('status')}" data-th-errors = "*{status}">
                 </p>
             </div>
