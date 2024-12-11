@@ -12,6 +12,10 @@
 # COPY src src
 # COPY .mvn .mvn
 
+# # Make mvnw executable
+# # RUN chmod a+x ./mvnw && mvnw package -Dmaven.test.skip=true
+# # /src/target/revision-0.0.1.jar
+
 # # RUN chmod a+x ./mvnw
 # # RUN ./mvnw clean package -Dmaven.skip.tests=true
 # RUN mvn clean package -Dmaven.skip.tests=true
@@ -52,7 +56,7 @@ RUN mvn clean package -Dmaven.skip.tests=true
 
 
 # stage 2 (Runtime Stage)
-# Consider using a lighter base image like  switch to a runtime-only image like eclipse-temurin:23-jre or openjdk:23-jre to reduce the image size.
+# Consider using a lighter base image like  switch to a runtime-only image like eclipse-temurin:23-jre or openjdk:23-jre to reduce the image size. (use jre?)
 # The maven image in the runtime stage includes unnecessary tools for running the application.
 # FROM eclipse-temurin:23-jre AS runtime
 FROM maven:3.9.9-eclipse-temurin-23 AS runtime
@@ -64,6 +68,7 @@ WORKDIR ${DEPLOY_DIR}
 COPY --from=compiler /code_folder/target/vttp5_day19l_pracws-0.0.1-SNAPSHOT.jar pracws.jar
 
 ENV SERVER_PORT=3000
+ENV MY_API_PASS_KEY=xyz789
 EXPOSE ${SERVER_PORT}
 
 ENTRYPOINT ["java", "-jar", "pracws.jar"]
